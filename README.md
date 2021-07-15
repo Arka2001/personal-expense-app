@@ -1,8 +1,11 @@
-# personal_expense_app
+# Personal Expense App
 
-A new Flutter project.
 
-## Getting Started
+This simple app provides a somewhat pretty UI wherein you can add or delete personal expenses. This is like your own micromanager of your daily expenses. It is simple yet effective. A chart is also included which shows the expense rate for the last 7 days.
+
+<br/>
+
+### Getting Started With Flutter
 
 This project is a starting point for a Flutter application.
 
