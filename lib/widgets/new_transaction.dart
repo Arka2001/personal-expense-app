@@ -1,31 +1,31 @@
 import 'package:flutter/material.dart';
-import 'dart:core';
-
-import 'package:flutter/services.dart';
 
 class NewTransaction extends StatefulWidget {
-  final void Function(String, double) addNewTransaction;
-  // ignore: use_key_in_widget_constructors
-  const NewTransaction({@required this.addNewTransaction});
+  final Function addTx;
+
+  NewTransaction(this.addTx);
 
   @override
-  State<NewTransaction> createState() => _NewTransactionState();
+  _NewTransactionState createState() => _NewTransactionState();
 }
 
 class _NewTransactionState extends State<NewTransaction> {
-  final _titleController = TextEditingController();
+  final titleController = TextEditingController();
 
-  final _amountController = TextEditingController();
+  final amountController = TextEditingController();
 
-  void submitTransaction() {
-    final enteredTitle = _titleController.text;
-    final enteredAmount = double.parse(_amountController.text);
+  void submitData() {
+    final enteredTitle = titleController.text;
+    final enteredAmount = double.parse(amountController.text);
 
     if (enteredTitle.isEmpty || enteredAmount <= 0) {
       return;
     }
 
-    widget.addNewTransaction(enteredTitle, enteredAmount);
+    widget.addTx(
+      enteredTitle,
+      enteredAmount,
+    );
 
     Navigator.of(context).pop();
   }
@@ -35,32 +35,29 @@ class _NewTransactionState extends State<NewTransaction> {
     return Card(
       elevation: 5,
       child: Container(
-        margin: const EdgeInsets.all(10),
-        padding: const EdgeInsets.all(10),
+        padding: EdgeInsets.all(10),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
-            // ignore: prefer_const_constructors
             TextField(
-              // ignore: prefer_const_constructors
               decoration: InputDecoration(labelText: 'Title'),
-              controller: _titleController,
+              controller: titleController,
+              onSubmitted: (_) => submitData(),
+              // onChanged: (val) {
+              //   titleInput = val;
+              // },
             ),
-            // ignore: prefer_const_constructors
             TextField(
-              // ignore: prefer_const_constructors
               decoration: InputDecoration(labelText: 'Amount'),
-              controller: _amountController,
+              controller: amountController,
               keyboardType: TextInputType.number,
-              onSubmitted: (_) => submitTransaction(),
+              onSubmitted: (_) => submitData(),
+              // onChanged: (val) => amountInput = val,
             ),
-            TextButton(
-              onPressed: () => submitTransaction(),
-              // ignore: prefer_const_constructors
-              child: Text(
-                'Add Transaction',
-                // ignore: prefer_const_constructors
-                style: TextStyle(color: Colors.indigoAccent),
-              ),
+            FlatButton(
+              child: Text('Add Transaction'),
+              textColor: Colors.purple,
+              onPressed: submitData,
             ),
           ],
         ),

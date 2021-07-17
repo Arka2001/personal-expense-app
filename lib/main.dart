@@ -1,70 +1,68 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/widgets.dart';
-import 'package:personal_expense_app/widgets/new_transaction.dart';
+
+import './widgets/new_transaction.dart';
 import './widgets/transaction_list.dart';
-import './models/transaction.dart';
 import './widgets/chart.dart';
+import './models/transaction.dart';
 
 void main() => runApp(MyApp());
 
-// ignore: use_key_in_widget_constructors
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Personal Expenses',
-      debugShowCheckedModeBanner: false,
-      home: MyHomePage(),
       theme: ThemeData(
-        primarySwatch: Colors.indigo,
-        accentColor: Colors.amber,
-        fontFamily: 'Quicksand',
-        textTheme: ThemeData.light().textTheme.copyWith(
-              headline6: const TextStyle(
-                fontFamily: 'OpenSans',
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-        appBarTheme: AppBarTheme(
+          primarySwatch: Colors.purple,
+          accentColor: Colors.amber,
+          fontFamily: 'Quicksand',
           textTheme: ThemeData.light().textTheme.copyWith(
-                headline6: const TextStyle(
+                title: TextStyle(
                   fontFamily: 'OpenSans',
-                  fontSize: 20.0,
                   fontWeight: FontWeight.bold,
+                  fontSize: 18,
                 ),
               ),
-        ),
-      ),
+          appBarTheme: AppBarTheme(
+            textTheme: ThemeData.light().textTheme.copyWith(
+                  title: TextStyle(
+                    fontFamily: 'OpenSans',
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+          )),
+      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
+  // String titleInput;
+  // String amountInput;
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _userTransactions = [
-    Transaction(
-      id: "t01",
-      title: "New RAM",
-      amount: 54.99,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: "t02",
-      title: "New laptop",
-      amount: 549.99,
-      date: DateTime.now(),
-    ),
+    // Transaction(
+    //   id: 't1',
+    //   title: 'New Shoes',
+    //   amount: 69.99,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: 't2',
+    //   title: 'Weekly Groceries',
+    //   amount: 16.53,
+    //   date: DateTime.now(),
+    // ),
   ];
 
   List<Transaction> get _recentTransactions {
-    return _userTransactions.where((element) {
-      return element.date.isAfter(
+    return _userTransactions.where((tx) {
+      return tx.date.isAfter(
         DateTime.now().subtract(
           Duration(days: 7),
         ),
@@ -72,60 +70,59 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
-  void _addNewTransactionItem(String newTitle, double newAmount) {
-    final _newTransactionItem = Transaction(
-      title: newTitle,
-      amount: newAmount,
+  void _addNewTransaction(String txTitle, double txAmount) {
+    final newTx = Transaction(
+      title: txTitle,
+      amount: txAmount,
       date: DateTime.now(),
       id: DateTime.now().toString(),
     );
 
     setState(() {
-      _userTransactions.add(_newTransactionItem);
+      _userTransactions.add(newTx);
     });
   }
 
   void _startAddNewTransaction(BuildContext ctx) {
     showModalBottomSheet(
-        context: ctx,
-        builder: (bctx) {
-          return NewTransaction(
-            addNewTransaction: _addNewTransactionItem,
-          );
-        });
+      context: ctx,
+      builder: (_) {
+        return GestureDetector(
+          onTap: () {},
+          child: NewTransaction(_addNewTransaction),
+          behavior: HitTestBehavior.opaque,
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // ignore: prefer_const_constructors
-        title: Text('Personal Expenses'),
-        // ignore: prefer_const_literals_to_create_immutables
+        title: Text(
+          'Personal Expenses',
+        ),
         actions: <Widget>[
-          // ignore: prefer_const_constructors
           IconButton(
-            onPressed: () {
-              _startAddNewTransaction(context);
-            },
-            icon: const Icon(Icons.add),
-          )
+            icon: Icon(Icons.add),
+            onPressed: () => _startAddNewTransaction(context),
+          ),
         ],
       ),
-      body: Expanded(
+      body: SingleChildScrollView(
         child: Column(
+          // mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          // ignore: prefer_const_literals_to_create_immutables
           children: <Widget>[
-            // ignore: prefer_const_constructors
             Chart(_recentTransactions),
-            TransactionList(_userTransactions)
+            TransactionList(_userTransactions),
           ],
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
+        child: Icon(Icons.add),
         onPressed: () => _startAddNewTransaction(context),
       ),
     );

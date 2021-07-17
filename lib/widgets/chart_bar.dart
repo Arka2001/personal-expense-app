@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 
-class BarChart extends StatelessWidget {
+class ChartBar extends StatelessWidget {
   final String label;
-  final double spendAmount;
-  final double spendPctOfTotal;
+  final double spendingAmount;
+  final double spendingPctOfTotal;
 
-  BarChart({this.label, this.spendAmount, this.spendPctOfTotal});
+  ChartBar(this.label, this.spendingAmount, this.spendingPctOfTotal);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Text('\$${spendAmount.toStringAsFixed(0)}'),
-        const SizedBox(
+        FittedBox(
+          child: Text('\$${spendingAmount.toStringAsFixed(0)}'),
+        ),
+        SizedBox(
           height: 4,
         ),
-        // ignore: sized_box_for_whitespace
         Container(
           height: 60,
           width: 10,
@@ -24,26 +25,26 @@ class BarChart extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey, width: 1.0),
-                  color: const Color.fromRGBO(220, 220, 220, 1),
-                  borderRadius: BorderRadius.circular(20),
+                  color: Color.fromRGBO(220, 220, 220, 1),
+                  borderRadius: BorderRadius.circular(10),
                 ),
               ),
               FractionallySizedBox(
-                heightFactor: spendPctOfTotal,
+                heightFactor: spendingPctOfTotal,
                 child: Container(
                   decoration: BoxDecoration(
                     color: Theme.of(context).primaryColor,
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
             ],
           ),
         ),
-        const SizedBox(
+        SizedBox(
           height: 4,
         ),
-        Text(label)
+        Text(label),
       ],
     );
   }
