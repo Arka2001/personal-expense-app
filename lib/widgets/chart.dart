@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/bar_chart.dart';
 import '../models/transaction.dart';
 import 'package:intl/intl.dart';
 
@@ -20,17 +21,37 @@ class Chart extends StatelessWidget {
           totalAmount += recentTransactions[i].amount;
         }
       }
-      return {'Day': DateFormat.E(weekDay), 'Amount': totalAmount};
+
+      return {
+        'Day': DateFormat.E().format(weekDay).substring(0, 1),
+        'Amount': totalAmount,
+      };
+    });
+  }
+
+  double get totalSpendings {
+    return groupedTransactions.fold(0.0, (sum, item) {
+      return sum + item['amount'];
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 6,
-      margin: const EdgeInsets.all(20),
-      child: Row(
-        children: null,
+    return Expanded(
+      child: Card(
+        elevation: 6,
+        margin: const EdgeInsets.all(20),
+        child: Expanded(
+          child: Row(
+            children: groupedTransactions.map((data) {
+              return BarChart(
+                label: data['Day'],
+                spendAmount: data['Amount'],
+                spendPctOfTotal: (data['Amount'] as double) / totalSpendings,
+              );
+            }).toList(),
+          ),
+        ),
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:personal_expense_app/widgets/new_transaction.dart';
 import './widgets/transaction_list.dart';
 import './models/transaction.dart';
+import './widgets/chart.dart';
 
 void main() => runApp(MyApp());
 
@@ -61,6 +62,16 @@ class _MyHomePageState extends State<MyHomePage> {
     ),
   ];
 
+  List<Transaction> get _recentTransactions {
+    return _userTransactions.where((element) {
+      return element.date.isAfter(
+        DateTime.now().subtract(
+          Duration(days: 7),
+        ),
+      );
+    }).toList();
+  }
+
   void _addNewTransactionItem(String newTitle, double newAmount) {
     final _newTransactionItem = Transaction(
       title: newTitle,
@@ -101,22 +112,20 @@ class _MyHomePageState extends State<MyHomePage> {
           )
         ],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        // ignore: prefer_const_literals_to_create_immutables
-        children: <Widget>[
-          // ignore: prefer_const_constructors
-          Card(
+      body: Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          // ignore: prefer_const_literals_to_create_immutables
+          children: <Widget>[
             // ignore: prefer_const_constructors
-            child: Text('Bar Chart'),
-            color: Colors.indigo,
-          ),
-          TransactionList(_userTransactions)
-        ],
+            Chart(_recentTransactions),
+            TransactionList(_userTransactions)
+          ],
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         onPressed: () => _startAddNewTransaction(context),
       ),
     );
