@@ -114,11 +114,8 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final _isLandscape =
-        MediaQuery.of(context).orientation == Orientation.landscape;
-    final _appBar = AppBar(
+  PreferredSizeWidget _buildAppBar() {
+    return AppBar(
       title: Text(
         'Personal Expenses',
       ),
@@ -129,6 +126,14 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ],
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final _isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
+    final _appBar = _buildAppBar();
 
     final _txListWidget = Container(
       height: (MediaQuery.of(context).size.height -
